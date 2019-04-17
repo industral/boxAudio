@@ -1,0 +1,31 @@
+@import '~@mdi/font/css/materialdesignicons.min.css';
+
+.mdi {
+  color: #909399;
+  vertical-align: middle;
+  margin: 0 4px 0 0;
+
+  &.mdi-help-circle {
+    margin: 0 0 0 4px;
+  }
+}
+
+.mdi-16px {
+  font-size: 16px;
+}
+
+.mdi-24px {
+  font-size: 24px;
+}
+
+.mdi.padding-right {
+  margin-right: 5px;
+}
+
+.mdi.padding-left {
+  margin-left: 5px;
+}
+
+.mdi.icon-button {
+  cursor: pointer;
+}

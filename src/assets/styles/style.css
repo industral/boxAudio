@@ -1,0 +1,22 @@
+.table-striped tr.active {
+  background-color: #116cd6 !important;
+  color: #fff;
+  font-weight: normal;
+}
+
+.table-striped tr.selected {
+  font-weight: bold;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.media-body strong {
+  font-size: 14px;
+}
+
+.media-body p {
+  font-size: 14px;
+}
