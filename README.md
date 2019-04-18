@@ -1,39 +1,23 @@
-# scirott-player
+# BoxAudio
 
-## Project setup
-```
-npm install
-```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+![BoxAudio](./website/images/landing.png)
 
-### Compiles and minifies for production
-```
-npm run build
-```
 
-### Run your tests
-```
-npm run test
-```
+[PWA](https://en.wikipedia.org/wiki/Progressive_web_applications) Audio player for streaming audio directly from [Dropbox](https://dropbox.com).
+Based on idea of [RoteSonne.js](https://github.com/industral/RoteSonne.js) audio player.
 
-### Lints and fixes files
-```
-npm run lint
-```
+### Features
 
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
+- **Supported formats**: FLAC, WavPack, Ogg, mp3, AAC
+- **No server side is required. Everything on client site!**
+- **Caching audio chunks** (not implemented yet)
 
-### Run your unit tests
-```
-npm run test:unit
-```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Stack
+
+- TypeScript
+- Vue.js, Vuex
+- Sass
+- [Element](https://element.eleme.io/#/en-US)
+- PWA (ServiceWorker)
