@@ -1,8 +1,8 @@
 <template>
-  <div class="cmp-page cmp-page-player">
+  <div class="cmp-page cmp-page-player pane-group">
     <div class="window">
       <header class="toolbar toolbar-header">
-        <h1 class="title">BoxAudio</h1>
+        <h1 class="title">ⓑoxAudio 🎶</h1>
 
         <Controls />
       </header>
@@ -40,7 +40,9 @@
       Controls
     }
   }) export default class Player extends Vue {
-
+    mounted() {
+      this.$store.commit('main/setLoading', false);
+    }
   }
 </script>
 

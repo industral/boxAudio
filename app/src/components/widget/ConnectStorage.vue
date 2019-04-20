@@ -59,7 +59,7 @@
     }
 
     @Watch('isScanInProgress')
-    async isScanInProgressChanged(value: string, oldValue: string) {
+    async isScanInProgressChanged() {
       await this.$store.dispatch('settings/updateIsDBPopulated');
     }
 
@@ -74,6 +74,12 @@
 
     async created() {
       await this.$store.dispatch('settings/updateIsDBPopulated');
+
+      if (this.isDBPopulated) {
+        this.$router.push({name: 'player'});
+      } else {
+        this.$store.commit('main/setLoading', false);
+      }
     }
   }
 </script>

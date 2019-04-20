@@ -23,13 +23,15 @@ export default new class Player {
     store.commit('player/setDuration', song.duration * 1000);
 
     this.player = AV.Player.fromURL(`/storage/download?file=${encodeURIComponent(song.file)}`, {
-      length: song.size
+      length: song.size,
+      //TODO: temporary fix, until fixed playback for m4a files.
+      chunkSize: song.file.endsWith('.m4a') ? song.size : 1024 ** 2
     });
 
-    this.player.on('error', (error: string) => {
+    this.player.on('error', (error: any) => {
       window.postMessage({
         type: 'error',
-        message: error
+        message: typeof error === 'string' ? error : 'Network error'
       }, location.origin);
     });
 

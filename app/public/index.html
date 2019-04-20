@@ -2,24 +2,151 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="Description" content="BoxAudio streaming player https://github.com/industral/BoxAudio">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="./img/icons/android-chrome-192x192.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./img/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./img/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./img/icons/favicon-16x16.png">
-    <link rel="manifest" href="./manifest.json">
-    <link rel="mask-icon" href="./img/icons/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>BoxAudio</title>
+    <link rel="manifest" href="./manifest.json">
+
+    <link rel="icon" type="image/png" href="./img/icons/android-chrome-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./img/icons/apple-touch-icon.png">
+    <link rel="mask-icon" href="./img/icons/safari-pinned-tab.svg" color="#5bbad5">
+
+    <style type="text/css">
+      /* http://meyerweb.com/eric/tools/css/reset/
+         v4.0 | 20180602
+         License: none (public domain)
+      */
+      html, body, div, span, applet, object, iframe,
+      h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+      a, abbr, acronym, address, big, cite, code,
+      del, dfn, em, img, ins, kbd, q, s, samp,
+      small, strike, strong, sub, sup, tt, var,
+      b, u, i, center,
+      dl, dt, dd, ol, ul, li,
+      fieldset, form, label, legend,
+      table, caption, tbody, tfoot, thead, tr, th, td,
+      article, aside, canvas, details, embed,
+      figure, figcaption, footer, header, hgroup,
+      main, menu, nav, output, ruby, section, summary,
+      time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
+
+      /* HTML5 display-role reset for older browsers */
+      article, aside, details, figcaption, figure,
+      footer, header, hgroup, main, menu, nav, section {
+        display: block;
+      }
+
+      /* HTML5 hidden-attribute fix for newer browsers */
+      *[hidden] {
+        display: none;
+      }
+
+      body {
+        line-height: 1;
+      }
+
+      ol, ul {
+        list-style: none;
+      }
+
+      blockquote, q {
+        quotes: none;
+      }
+
+      blockquote:before, blockquote:after,
+      q:before, q:after {
+        content: '';
+        content: none;
+      }
+
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+    </style>
+
+    <style type="text/css">
+      @keyframes ld-rubber {
+        0% {
+          -webkit-transform: scale(1, 1);
+          transform: scale(1, 1);
+        }
+        20% {
+          -webkit-transform: scale(1.5, 1);
+          transform: scale(1.5, 1);
+        }
+        30% {
+          -webkit-transform: scale(0.8, 1);
+          transform: scale(0.8, 1);
+        }
+        40% {
+          -webkit-transform: scale(1.3, 1);
+          transform: scale(1.3, 1);
+        }
+        50% {
+          -webkit-transform: scale(0.85, 1);
+          transform: scale(0.85, 1);
+        }
+        60% {
+          -webkit-transform: scale(1.2, 1);
+          transform: scale(1.2, 1);
+        }
+        70% {
+          -webkit-transform: scale(0.9, 1);
+          transform: scale(0.9, 1);
+        }
+        80% {
+          -webkit-transform: scale(1.1, 1);
+          transform: scale(1.1, 1);
+        }
+        90% {
+          -webkit-transform: scale(0.95, 1);
+          transform: scale(0.95, 1);
+        }
+        100% {
+          -webkit-transform: scale(1, 1);
+          transform: scale(1, 1);
+        }
+      }
+
+      .ld.ld-rubber {
+        -webkit-animation: ld-rubber 1s ease-out infinite;
+        animation: ld-rubber 1s ease-out infinite;
+      }
+
+      .loading-logo-wrapper {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        text-align: center;
+        z-index: 1;
+      }
+    </style>
+
+    <title>ⓑoxAudio 🎶</title>
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but BoxAudio doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <h1 style="text-align: center;">
+        We're sorry but BoxAudio doesn't work properly without JavaScript enabled. Please enable it to continue.
+      </h1>
     </noscript>
-    <div id="app"></div>
+    <div id="app">
+      <div class="loading-logo-wrapper">
+        <img src="/img/logo.png" alt="Loading..." width="100" height="100" class="ld ld-rubber" />
+      </div>
+    </div>
     <!-- built files will be auto injected -->
   </body>
 </html>

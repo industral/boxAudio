@@ -1,5 +1,4 @@
 <template>
-  <h1>Redirecting back...</h1>
 </template>
 
 <script lang="ts">
