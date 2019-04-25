@@ -1,4 +1,4 @@
-const VERSION = '0.0.4';
+const VERSION = '0.0.5';
 const DATA = {};
 const CACHE_NAME = `cache-${VERSION}`;
 
@@ -120,6 +120,8 @@ self.addEventListener('fetch', async function(event) {
       event.respondWith(promise);
     }
   } else {
+    if (event.request.url === 'https://content.dropboxapi.com/2/files/download') return;
+
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) => {
         return cache.match(event.request).then((response) => {

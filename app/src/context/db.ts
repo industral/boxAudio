@@ -1,11 +1,13 @@
 import Dexie from 'dexie';
 
-enum StorageName {
-  Dropbox = 'Dropbox'
+export enum StorageName {
+  Dropbox = 'dropbox'
 }
 
 export interface ISong {
   id?: number;
+  storageName: StorageName;
+  storageId: string;
   artist: string;
   albumArtist: string;
   album: string;
@@ -21,13 +23,10 @@ export interface ISong {
 }
 
 export interface IAlbum {
+  storageName: StorageName;
   albumArtist: string;
   album: string;
   coverArt?: object;
-}
-
-export interface IStorage {
-  name: StorageName;
 }
 
 class boxAudio extends Dexie {
@@ -37,9 +36,9 @@ class boxAudio extends Dexie {
   constructor() {
     super('boxAudio');
 
-    this.version(1).stores({
-      songs: 'file,artist,albumArtist,album,title',
-      albums: '[albumArtist+album],albumArtist,album',
+    this.version(3).stores({
+      songs: 'file,artist,albumArtist,album,storageName,storageId',
+      albums: '[albumArtist+album],albumArtist,album,storageName',
       songChunkCache: '++chunkId'
     });
   }
@@ -77,7 +76,7 @@ class DB {
   }
 
   async getAlbumsForArtist(artist: string) {
-    const result:any = {};
+    const result: any = {};
     const songs = await db.songs.where('albumArtist').equals(artist).toArray();
     const albums = await db.albums.where('albumArtist').equals(artist).toArray();
 
@@ -85,7 +84,13 @@ class DB {
       result[song.album] = result[song.album] || {};
       result[song.album].count = result[song.album].count || 0;
       ++result[song.album].count;
-      result[song.album].coverArt = result[song.album].coverArt || albums.find((album) => album.album === song.album).coverArt
+
+      if (!result[song.album].coverArt) {
+        const foundAlbum = albums.find((album) => album.album === song.album);
+        if (foundAlbum && foundAlbum.coverArt) {
+          result[song.album].coverArt = foundAlbum.coverArt;
+        }
+      }
     }
 
     return result;

@@ -1,3 +1,13 @@
+## [0.0.5] - 2019-04-25
+
+### Fixed
+- Page crashes while scanning library #20
+- Requesting files by name in Dropbox with utf-8 cause error #17
+
+### Changed
+- Added id requests to Dropbox instead of file names
+
+
 ## [0.0.4] - 2019-04-25
 
 ### Changed

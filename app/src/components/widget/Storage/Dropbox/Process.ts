@@ -6,7 +6,7 @@ import {IAudioMetadata} from '@industral/music-metadata-browser';
 import store from '@/stores';
 import {LogType} from '@/stores/modules/library-processing';
 
-import db from '@/context/db';
+import db, {StorageName} from '@/context/db';
 import arrayBufferConcat from 'arraybuffer-concat';
 
 const Dropbox = dropbox.Dropbox;
@@ -47,9 +47,10 @@ export default class DropboxProcess extends LibraryProcess {
     let metadata;
     try {
       metadata = await mm.fetchFromUrl(objectURL);
-      URL.revokeObjectURL(objectURL);
     } catch (error) {
     } finally {
+      URL.revokeObjectURL(objectURL);
+
       return {
         metadata,
         data
@@ -82,18 +83,19 @@ export default class DropboxProcess extends LibraryProcess {
 
   private async getMetadataForFileWithTries(file: dropbox.files.FileMetadataReference) {
     let arrayBuffer: ArrayBuffer;
+
     try {
-      let dataResult = await this.fetchFileDataRange(file.path_lower);
-      arrayBuffer = dataResult.data;
+      let fileDataRangeResult = await this.fetchFileDataRange(file.id);
+      arrayBuffer = fileDataRangeResult.data;
 
       let metadataResult = await this.getMetadataForArrayBuffer(arrayBuffer);
       let iteration = 1;
 
       while (iteration < 5) {
         if (!this.isMetadataOK(metadataResult && metadataResult.metadata)) {
-          dataResult = await this.fetchFileDataRange(file.path_lower, dataResult.bytesRangeStart + dataResult.bytesRangeAmount, dataResult.bytesRangeAmount);
+          fileDataRangeResult = await this.fetchFileDataRange(file.id, fileDataRangeResult.bytesRangeStart + fileDataRangeResult.bytesRangeAmount, fileDataRangeResult.bytesRangeAmount);
 
-          arrayBuffer = arrayBufferConcat(arrayBuffer, dataResult.data);
+          arrayBuffer = arrayBufferConcat(arrayBuffer, fileDataRangeResult.data);
           metadataResult = await this.getMetadataForArrayBuffer(arrayBuffer);
 
           ++iteration;
@@ -120,6 +122,8 @@ export default class DropboxProcess extends LibraryProcess {
           }
 
           await db.addSong({
+            storageName: StorageName.Dropbox,
+            storageId: file.id,
             artist: metadata.common.artist || 'Unknown',
             albumArtist: metadata.common.albumartist || metadata.common.artist || 'Unknown',
             album: metadata.common.album || 'Unknown',
@@ -135,6 +139,7 @@ export default class DropboxProcess extends LibraryProcess {
           });
 
           await db.addAlbum({
+            storageName: StorageName.Dropbox,
             albumArtist: metadata.common.albumartist || metadata.common.artist || 'Unknown',
             album: metadata.common.album || 'Unknown',
             coverArt: metadata.common.picture
@@ -154,6 +159,8 @@ export default class DropboxProcess extends LibraryProcess {
       const metadata = metadataResult && metadataResult.metadata;
 
       await db.addSong({
+        storageId: file.id,
+        storageName: StorageName.Dropbox,
         artist: metadata && metadata.common.artist || 'Unknown',
         albumArtist: metadata && metadata.common.albumartist || metadata && metadata.common.artist || 'Unknown',
         album: metadata && metadata.common.album || 'Unknown',
@@ -166,6 +173,7 @@ export default class DropboxProcess extends LibraryProcess {
       });
 
       await db.addAlbum({
+        storageName: StorageName.Dropbox,
         albumArtist: 'Unknown',
         album: 'Unknown'
       });
