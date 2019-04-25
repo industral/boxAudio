@@ -98,67 +98,86 @@ export default class DropboxProcess extends LibraryProcess {
 
           ++iteration;
         } else {
-          if (this.isMetadataOK(metadataResult && metadataResult.metadata)) {
-            const metadata = metadataResult.metadata!;
+          const metadata = metadataResult.metadata!;
 
-            let trackNumber: string = '';
-            let diskNumber: string = '';
+          let trackNumber: string = '';
+          let diskNumber: string = '';
 
-            if (metadata.common.track.no) {
-              trackNumber = metadata.common.track.no.toString();
+          if (metadata.common.track.no) {
+            trackNumber = metadata.common.track.no.toString();
 
-              if (metadata.common.track.of) {
-                trackNumber += ` of ${metadata.common.track.of}`;
-              }
+            if (metadata.common.track.of) {
+              trackNumber += ` of ${metadata.common.track.of}`;
             }
-
-            if (metadata.common.disk.no) {
-              diskNumber = metadata.common.disk.no.toString();
-
-              if (metadata.common.disk.of) {
-                diskNumber += ` of ${metadata.common.disk.of}`;
-              }
-            }
-
-            await db.addSong({
-              artist: metadata.common.artist || 'Unknown',
-              albumArtist: metadata.common.albumartist || metadata.common.artist || 'Unknown',
-              album: metadata.common.album || 'Unknown',
-              title: metadata.common.title || 'Unknown',
-              diskNumber: diskNumber,
-              trackNumber: trackNumber,
-              file: file.path_lower!,
-              coverArt: metadata.common.picture,
-              size: file.size,
-              bitrate: metadata.format.bitrate!,
-              duration: metadata.format.duration!,
-              dataformat: metadata.format.dataformat!
-            });
-
-            await db.addAlbum({
-              albumArtist: metadata.common.albumartist || metadata.common.artist || 'Unknown',
-              album: metadata.common.album || 'Unknown',
-              coverArt: metadata.common.picture
-            });
-
-            delete metadata.common.picture;
-            store.commit('libraryProcessing/addLog', {
-              type: LogType.info,
-              message: `Metadata found for file: ${file.path_lower}`,
-              messageLong: `Metadata: ${JSON.stringify(metadata, null, 2)}`
-            });
-          } else {
-            store.commit('libraryProcessing/addLog', {
-              type: LogType.warn,
-              message: `Metadata was found for file: ${file.path_lower}`
-            });
           }
+
+          if (metadata.common.disk.no) {
+            diskNumber = metadata.common.disk.no.toString();
+
+            if (metadata.common.disk.of) {
+              diskNumber += ` of ${metadata.common.disk.of}`;
+            }
+          }
+
+          await db.addSong({
+            artist: metadata.common.artist || 'Unknown',
+            albumArtist: metadata.common.albumartist || metadata.common.artist || 'Unknown',
+            album: metadata.common.album || 'Unknown',
+            title: metadata.common.title || 'Unknown',
+            diskNumber: diskNumber,
+            trackNumber: trackNumber,
+            file: file.path_lower!,
+            coverArt: metadata.common.picture,
+            size: file.size,
+            bitrate: metadata.format.bitrate!,
+            duration: metadata.format.duration!,
+            dataformat: metadata.format.dataformat!
+          });
+
+          await db.addAlbum({
+            albumArtist: metadata.common.albumartist || metadata.common.artist || 'Unknown',
+            album: metadata.common.album || 'Unknown',
+            coverArt: metadata.common.picture
+          });
+
+          delete metadata.common.picture;
+          store.commit('libraryProcessing/addLog', {
+            type: LogType.info,
+            message: `Metadata found for file: ${file.path_lower}`,
+            messageLong: `Metadata: ${JSON.stringify(metadata, null, 2)}`
+          });
 
           break;
         }
       }
+
+      const metadata = metadataResult && metadataResult.metadata;
+
+      await db.addSong({
+        artist: metadata && metadata.common.artist || 'Unknown',
+        albumArtist: metadata && metadata.common.albumartist || metadata && metadata.common.artist || 'Unknown',
+        album: metadata && metadata.common.album || 'Unknown',
+        title: metadata && metadata.common.title || file.path_lower! || 'Unknown',
+        file: file.path_lower!,
+        size: file.size,
+        bitrate: 0,
+        duration: 0,
+        dataformat: 'Unknown'
+      });
+
+      await db.addAlbum({
+        albumArtist: 'Unknown',
+        album: 'Unknown'
+      });
+
+      store.commit('libraryProcessing/addLog', {
+        type: LogType.warn,
+        message: `Metadata was not found for file: ${file.path_lower}`
+      });
     } catch (error) {
       console.error(error);
+    } finally {
+      arrayBuffer = null;
     }
   }
 
@@ -185,7 +204,7 @@ export default class DropboxProcess extends LibraryProcess {
     const result: dropbox.files.ListFolderResult = await new Dropbox({
       fetch,
       accessToken: store.state.settings.accessTokenDropbox
-    })[method](params); //TODO: remove `Above & Beyond` after test
+    })[method](params);
 
 
     for (const item of result.entries) {

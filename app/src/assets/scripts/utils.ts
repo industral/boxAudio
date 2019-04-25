@@ -8,7 +8,7 @@ export default class Utils {
 
   static getURLFromArrayBuffer(data: ArrayBuffer | null) {
     if (!data) {
-      return '/img/no-cover.png';
+      return '/img/no-cover.jpg';
     }
 
     return URL.createObjectURL(new Blob([data.data], {mime: data.format}));

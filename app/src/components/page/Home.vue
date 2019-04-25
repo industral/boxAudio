@@ -21,7 +21,7 @@
       await this.$store.dispatch('settings/updateIsDBPopulated');
 
       if (this.showConnectStorageComponent) {
-        this.$router.push({name: 'initialSetup'});
+        this.$router.push({name: 'welcome'});
       } else {
         this.$router.push({name: 'player'});
       }

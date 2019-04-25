@@ -1,17 +1,17 @@
 <template>
   <div class="cmp-page cmp-page-initial-setup">
-    <ConnectStorage />
+    <InitialSetupWidget />
   </div>
 </template>
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
 
-  import ConnectStorage from '../widget/ConnectStorage.vue';
+  import InitialSetupWidget from '../widget/InitialSetup.vue';
 
   @Component({
     components: {
-      ConnectStorage
+      InitialSetupWidget
     }
   }) export default class InitialSetup extends Vue {
 

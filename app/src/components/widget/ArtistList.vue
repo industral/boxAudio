@@ -1,9 +1,9 @@
 <template>
-  <ul class="cmp-widget cmp-widget-artist-list list-group">
-    <li :class="['list-group-item', {active: artistName === selectedArtist}]" @click="selectArtist(artistName)"
+  <ul class="cmp-widget cmp-widget-artist-list">
+    <li :class="[{active: artistName === selectedArtist}]" @click="selectArtist(artistName)"
         v-for="(artistData, artistName) of artists">
       <AlbumCover :albums="artistData.albums" />
-      <div class="media-body">
+      <div class="album-info">
         <strong :title="artistName">{{ artistName }}</strong>
         <p>{{ artistData.albums.length }} albums</p>
       </div>
@@ -30,20 +30,57 @@
 
     selectArtist(artistName: string) {
       this.$store.commit('player/selectArtist', artistName);
+      this.$store.commit('player/selectAlbum', null);
+    }
+
+    selectArtistAtStartup() {
+      const artistsKeys = Object.keys(this.artists);
+      if (artistsKeys.length) {
+        this.selectArtist(artistsKeys[0]);
+      }
     }
 
     async mounted() {
       this.artists = await db.getArtistsWithinAlbums();
+
+      this.selectArtistAtStartup();
     }
   }
 </script>
 
 <style lang="scss">
   .cmp-widget-artist-list {
+    position: relative;
+    background: rgba(255, 255, 255, 0.5);
+
+    box-sizing: border-box;
+    overflow: auto;
+    width: 330px;
+
+    li, .album-info {
+      padding: 5px 0 5px 10px;
+    }
+
     li {
+      position: relative;
+
+      strong {
+        font-weight: bold;
+        margin: 0 0 5px 0;
+        display: inline-block;
+      }
+
       img {
-        height: 40px;
-        width: 40px;
+        height: 50px;
+        width: 50px;
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      &.active {
+        img {
+          height: 60px;
+          width: 60px;
+        }
       }
     }
   }

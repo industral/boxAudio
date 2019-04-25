@@ -1,7 +1,7 @@
-# BoxAudio
+# boxAudio
 
 
-![BoxAudio](./website/images/landing.png)
+![boxAudio](./website/images/landing.png)
 
 
 [PWA](https://en.wikipedia.org/wiki/Progressive_web_applications) Audio player for streaming audio directly from [Dropbox](https://dropbox.com).

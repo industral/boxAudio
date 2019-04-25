@@ -1,14 +1,15 @@
 <template>
-  <div class="cmp-widget cmp-widget-song-list table-striped">
+  <div class="cmp-widget cmp-widget-song-list">
     <table>
       <thead>
         <tr>
           <th class="track">Track</th>
-          <th>Name</th>
+          <th class="name">Name</th>
         </tr>
       </thead>
       <tbody>
-        <tr :class="{active: song.file === selectedSong}" @dblclick="playSong(song)" v-for="song of songs">
+        <tr :class="{active: song.file === playingSong, selected: song.file === selectedSong}" @click="selectSong(song)"
+            @dblclick="playSong(song)" v-for="song of songs">
           <td>{{ song.trackNumber }}</td>
           <td>{{ song.title }}</td>
         </tr>
@@ -23,15 +24,27 @@
   import Player from '@/context/Player';
 
   @Component export default class SongList extends Vue {
+    data() {
+      return {
+        selectedSong: null
+      };
+    }
+
     songs: ISong[] = [];
 
     selectSong(song: ISong) {
-      this.$store.commit('player/selectSong', song.file);
+      this.$data.selectedSong = song.file;
     }
 
     async playSong(song: ISong) {
       if (this.$store.state.settings.accessTokenDropbox) {
-        this.selectSong(song);
+        if (!this.playingSong) {
+          this.$store.commit('player/setShownProgress', true);
+        }
+
+        this.$store.commit('player/selectSong', song.file);
+        this.$store.commit('player/setSongTitle', song.title);
+
         await Player.play(song);
       } else {
         this.$message.error('No Dropbox Access Token was found. Please reconnect to Dropbox storage again.');
@@ -42,10 +55,9 @@
       return this.$store.state.player.selectedAlbum;
     }
 
-    get selectedSong() {
+    get playingSong() {
       return this.$store.state.player.selectedSong;
     }
-
 
     @Watch('selectedAlbum')
     async onPropertyChanged() {
@@ -53,3 +65,53 @@
     }
   }
 </script>
+
+<style lang="scss">
+  .cmp-widget-song-list {
+    display: flex;
+    flex: 1;
+    overflow: auto;
+
+    .selected {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    table {
+      width: 100%;
+
+      thead {
+        tr {
+          height: 30px;
+          line-height: 30px;
+        }
+      }
+
+      tbody {
+        tr {
+          cursor: default;
+
+          &:after {
+            display: none;
+          }
+
+          td {
+            padding: 5px 10px;
+          }
+
+          &:nth-child(even) {
+            td {
+              background: rgba(0, 0, 0, 0.1);
+            }
+          }
+        }
+      }
+    }
+
+    .track {
+    }
+
+    .name {
+
+    }
+  }
+</style>

@@ -1,9 +1,26 @@
+## [0.0.4] - 2019-04-25
+
+### Changed
+- New UI
+- Dropped element UI, photon
+
+### Added
+- Lottie
+- Handle Service Worker Update
+- Ability to install Application issue #1
+
+### Fixed
+- fixed #10
+- fixed #19
+- Process now adding to collection all files
+- Show progress only if it's available
+
 ## [0.0.3] - 2019-04-21
 
 Site deployed first time to https://boxaudio.app
 
 ### Added
-- caching to service worker
+- caching to service worker issue #2
 - SSL certs for local development
 - SSL generating script
 - gzip compression
@@ -11,7 +28,7 @@ Site deployed first time to https://boxaudio.app
 
 ### Changed
 - bundle size reduced. Routes split into chunks
-- improved loader component
+- improved loader component issue #12
 
 
 ## [0.0.2] - 2019-04-18

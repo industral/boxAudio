@@ -28,6 +28,10 @@ export default new class Player {
       chunkSize: song.file.endsWith('.m4a') ? song.size : 1024 ** 2
     });
 
+    this.player.on('duration', (duration: number) => {
+      store.commit('player/setDuration', duration);
+    });
+
     this.player.on('error', (error: any) => {
       window.postMessage({
         type: 'error',

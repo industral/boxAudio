@@ -30,12 +30,12 @@ export interface IStorage {
   name: StorageName;
 }
 
-class BoxAudio extends Dexie {
+class boxAudio extends Dexie {
   public songs!: Dexie.Table<ISong, number>;
   public albums!: Dexie.Table<IAlbum, number>;
 
   constructor() {
-    super('BoxAudio');
+    super('boxAudio');
 
     this.version(1).stores({
       songs: 'file,artist,albumArtist,album,title',
@@ -45,7 +45,7 @@ class BoxAudio extends Dexie {
   }
 }
 
-const db = new BoxAudio();
+const db = new boxAudio();
 
 class DB {
   async playlistCount() {

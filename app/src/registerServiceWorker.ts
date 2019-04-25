@@ -20,6 +20,11 @@ register(`${process.env.BASE_URL}sw.js`, {
   },
 
   updated() {
+    window.postMessage({
+      type: 'worker',
+      action: 'updated'
+    }, location.origin);
+
     console.log('New content is available; please refresh.');
   },
 

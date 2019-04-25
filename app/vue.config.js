@@ -15,6 +15,10 @@ module.exports = {
 
   chainWebpack: (config) => {
     config.plugins.delete('prefetch');
+
+    if (config.plugins.has('optimize-css')) {
+      config.plugins.delete('optimize-css')
+    }
   }
 };
 
@@ -34,7 +38,7 @@ if (process.env.NODE_ENV === 'production') {
   };
 } else {
   module.exports.devServer = {
-    host: 'localhost',
+    // host: 'localhost',
     https: {
       key: fs.readFileSync(`${__dirname}/server/certs/server.key`),
       cert: fs.readFileSync(`${__dirname}/server/certs/server.crt`),

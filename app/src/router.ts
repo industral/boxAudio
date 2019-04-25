@@ -15,6 +15,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "Router-Home" */ '@/components/page/Home.vue'),
     },
     {
+      path: '/welcome',
+      name: 'welcome',
+      component: () => import(/* webpackChunkName: "Router-InitialSetup" */ '@/components/page/Welcome.vue'),
+    },
+    {
       path: '/initial-setup',
       name: 'initialSetup',
       component: () => import(/* webpackChunkName: "Router-InitialSetup" */ '@/components/page/InitialSetup.vue'),

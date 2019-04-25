@@ -1,6 +1,28 @@
+/* Helvetica Neue */
 @font-face {
-  font-family: 'Menlo';
+  font-family: 'Helvetica Neue';
+  font-style: normal;
+  font-weight: 200;
+  src: url('../fonts/helvetica-neue/helveticaneueultralight.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  font-style: normal;
+  font-weight: 300;
+  src: url('../fonts/helvetica-neue/helveticaneuelight.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
   font-style: normal;
   font-weight: 400;
-  src: url('../fonts/Menlo.woff') format('woff');
+  src: url('../fonts/helvetica-neue/helveticaneue.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  font-style: normal;
+  font-weight: 600;
+  src: url('../fonts/helvetica-neue/helveticaneuebold.woff') format('woff');
 }

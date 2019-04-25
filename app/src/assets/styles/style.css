@@ -1,22 +1,13 @@
-.table-striped tr.active {
-  background-color: #116cd6 !important;
-  color: #fff;
-  font-weight: normal;
+html {
+  font: calc(0.6vw + 0.6vh + 0.5vmin) 'Helvetica Neue', sans-serif;
 }
 
-.table-striped tr.selected {
-  font-weight: bold;
-}
-
-.title {
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.media-body strong {
-  font-size: 14px;
-}
-
-.media-body p {
-  font-size: 14px;
+.active:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 4px;
+  background: #e49549 !important;
 }

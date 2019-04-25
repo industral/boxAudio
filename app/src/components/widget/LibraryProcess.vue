@@ -1,19 +1,20 @@
 <template>
   <div class="cmp-widget cmp-widget-library-process">
     <div class="progress-wrapper">
-      <el-progress :percentage="processedPercentage" :stroke-width="18" :text-inside="true"></el-progress>
-      <span @click="stop()" class="mdi mdi-16px mdi-close-circle-outline padding-left button-cancel"
-            v-if="isScanInProgress"></span>
+      <progress min="0" max="100" :value="processedPercentage"></progress>
+<!--      <el-progress :percentage="processedPercentage" :stroke-width="18" :text-inside="true"></el-progress>-->
+<!--      <span @click="stop()" class="mdi mdi-16px mdi-close-circle-outline padding-left button-cancel"-->
+<!--            v-if="isScanInProgress"></span>-->
     </div>
 
-    <div class="logs">
-      <ol>
-        <li v-for="log of logs">
-          <div class="message">{{ log.message }}</div>
-          <!--          <div class="message-long" v-if="log.messageLong">{{ log.messageLong }}</div>-->
-        </li>
-      </ol>
-    </div>
+<!--    <div class="logs">-->
+<!--      <ol>-->
+<!--        <li v-for="log of logs">-->
+<!--          <div class="message">{{ log.message }}</div>-->
+<!--          &lt;!&ndash;          <div class="message-long" v-if="log.messageLong">{{ log.messageLong }}</div>&ndash;&gt;-->
+<!--        </li>-->
+<!--      </ol>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -54,15 +55,28 @@
 <style lang="scss">
   .cmp-widget-library-process {
     .logs {
-      font-family: Menlo;
+      font-size: 0.8vw;
       margin: 20px 0;
       height: 100px;
       overflow: hidden;
       text-align: left;
-
       display: flex;
       flex-direction: column-reverse;
-      /*align-items: flex-end;*/
+      position: relative;
+      padding: 10px;
+      color: #fff;
+
+      &:after {
+        content: '';
+        width: calc(100% - 8px);
+        height: calc(100% - 8px);
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        box-shadow: 1px 1px 200px inset #000;
+        filter: blur(6px);
+        z-index: 0;
+      }
 
       ol {
         white-space: pre;
@@ -79,6 +93,8 @@
 
     .progress-wrapper {
       display: flex;
+      align-items: center;
+      justify-content: center;
 
       .el-progress {
         width: 100%;

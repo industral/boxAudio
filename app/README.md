@@ -1,4 +1,4 @@
-# BoxAudio
+# boxAudio
 
 ## Project setup
 ```

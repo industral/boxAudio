@@ -9,19 +9,28 @@ interface IState {
   selectedArtist?: string|null;
   selectedAlbum?: string|null;
   selectedSong?: string|null;
-  duration: number,
-  currentTime: number,
-  playingState: IPlayingState
+  albumCovers?: [];
+  songTitle: string|null,
+  duration: number;
+  currentTime: number;
+  playingState: IPlayingState;
+
+  isProgressShown: boolean;
 }
 
 const internalState: IState = {
   selectedArtist: null,
   selectedAlbum: null,
   selectedSong: null,
+  songTitle: null,
+
+  albumCovers: [],
 
   duration: 0,
   currentTime: 0,
-  playingState: IPlayingState.None
+  playingState: IPlayingState.None,
+
+  isProgressShown: false
 };
 
 const actions = {
@@ -40,6 +49,10 @@ const mutations = {
     state.selectedSong = songFile;
   },
 
+  setSongTitle(state: IState, songTitle: string|null) {
+    state.songTitle = songTitle;
+  },
+
   setDuration(state: IState, duration: number) {
     state.duration = duration;
   },
@@ -50,6 +63,14 @@ const mutations = {
 
   setPlayingState(state: IState, playingState: IPlayingState) {
     state.playingState = playingState;
+  },
+
+  setShownProgress(state: IState, isShownProgress: boolean) {
+    state.isProgressShown = isShownProgress;
+  },
+
+  setAlbumCovers(state: IState, albumCovers) {
+    state.albumCovers = albumCovers;
   }
 };
 

@@ -1,9 +1,14 @@
+const VERSION = '0.0.4';
 const DATA = {};
-const CACHE_NAME = 'cache-v2';
+const CACHE_NAME = `cache-${VERSION}`;
 
-let filesToCache = [];
+/*
+ * If self.__precacheManifest missed, then we're in dev mode, and should skip caching.
+ */
+const shouldWeCache = !!self.__precacheManifest;
+let filesToCache;
 
-if (self.__precacheManifest) {
+if (shouldWeCache) {
   filesToCache = self.__precacheManifest.reduce((acc, curr) => {
     const url = curr.url;
 
@@ -17,16 +22,29 @@ if (self.__precacheManifest) {
   }, []);
 }
 
-self.addEventListener('message', function(event) {
+self.addEventListener('message', (event) => {
   if (event.data.accessTokenDropbox) {
     DATA.accessTokenDropbox = event.data.accessTokenDropbox;
   }
+
+  if (event.data.type) {
+    if (event.data.type === 'worker') {
+      if (event.data.action === 'skip-waiting') {
+        self.skipWaiting().then(() => {
+          //
+        }).catch((error) => {
+          console.error(error);
+        });
+      }
+    }
+  }
 });
 
-self.addEventListener('activate', event => {
+self.addEventListener('activate', async function(event) {
   console.log('Activating new service worker...');
 
   const cacheWhitelist = [CACHE_NAME];
+  clients.claim(); // force use of SW immediately
 
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -39,16 +57,24 @@ self.addEventListener('activate', event => {
       );
     })
   );
+
+  await sendMessage(event, {
+    type: 'worker',
+    message: 'activated'
+  });
 });
 
 self.addEventListener('install', event => {
   console.log('Attempting to install service worker and cache static assets');
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        return cache.addAll(filesToCache);
-      })
-  );
+
+  if (shouldWeCache) {
+    event.waitUntil(
+      caches.open(CACHE_NAME)
+        .then(cache => {
+          return cache.addAll(filesToCache);
+        })
+    );
+  }
 });
 
 self.addEventListener('fetch', async function(event) {
@@ -98,7 +124,10 @@ self.addEventListener('fetch', async function(event) {
       caches.open(CACHE_NAME).then((cache) => {
         return cache.match(event.request).then((response) => {
           return response || fetch(event.request).then((response) => {
-            cache.put(event.request, response.clone());
+            if (shouldWeCache) {
+              cache.put(event.request, response.clone());
+            }
+
             return response;
           });
         });
@@ -120,11 +149,19 @@ function createNewRequest(request, path) {
   return r;
 }
 
-async function sendMessage(message) {
+async function sendMessage(event, message) {
+  let client;
+
   if (event.clientId) {
-    const client = await clients.get(event.clientId);
-    if (client) {
-      client.postMessage(message);
-    }
+    client = await clients.get(event.clientId);
+  } else {
+    const allClients = await clients.matchAll();
+    client = allClients[0];
   }
+
+  if (client) {
+    return client.postMessage(message);
+  }
+
+  console.error(`Can't find client ID`);
 }

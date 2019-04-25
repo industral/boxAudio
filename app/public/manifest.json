@@ -1,6 +1,6 @@
 {
-  "name": "BoxAudio",
-  "short_name": "BoxAudio",
+  "name": "boxAudio",
+  "short_name": "boxAudio",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
