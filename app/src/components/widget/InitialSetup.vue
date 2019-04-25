@@ -46,13 +46,14 @@
       return this.$store.state.settings.isDBPopulated;
     }
 
-    get noConnectStorageNoDB() {
-      return !this.isDropboxTokenPresented && !this.isDBPopulated;
-    }
-
     @Watch('isScanInProgress')
     async isScanInProgressChanged() {
       await this.$store.dispatch('settings/updateIsDBPopulated');
+    }
+
+    @Watch('isDBPopulated')
+    async isDBPopulatedChanged() {
+      if (this.isDBPopulated) this.$router.push({name: 'player'});
     }
 
     connectStorage() {

@@ -14,7 +14,7 @@ const actions = {
   async updateIsDBPopulated({commit}) {
     try {
       const result = await db.playlistCount();
-      commit('setDBPopulated', result);
+      commit('setDBPopulated', !!result);
     } catch (error) {
       return error;
     }

@@ -1,13 +1,14 @@
 html {
-  font: calc(0.6vw + 0.6vh + 0.5vmin) 'Helvetica Neue', sans-serif;
+    user-select: none;
+    font: calc(0.6vw + 0.6vh + 0.5vmin) 'Helvetica Neue', sans-serif;
 }
 
 .active:after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 4px;
-  background: #e49549 !important;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 4px;
+    background: #e49549 !important;
 }

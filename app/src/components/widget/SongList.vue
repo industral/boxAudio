@@ -38,9 +38,9 @@
 
     async playSong(song: ISong) {
       if (this.$store.state.settings.accessTokenDropbox) {
-        if (!this.playingSong) {
+        // if (!this.playingSong) {
           this.$store.commit('player/setShownProgress', true);
-        }
+        // }
 
         this.$store.commit('player/selectSong', song.file);
         this.$store.commit('player/setSongTitle', song.title);

@@ -1,7 +1,6 @@
 <template>
-  <div class="cmp-widget-install-pwa" v-if="ableToInstall">
-    <div @click="installApplication()" class="install">Install Application</div>
-    <!--    <span @click="toggleCollapse()" class="mdi mdi-16px mdi-menu padding-left toggle-button"></span>-->
+  <div @click="installApplication()" class="cmp-widget-install-pwa" v-if="ableToInstall">
+    <div class="install">Install Application</div>
   </div>
 </template>
 
@@ -69,20 +68,13 @@
     padding: 10px 30px;
     color: rgba(255, 255, 255, 0.66);
     font-size: 1.1vw;
-    /* display: flex; */
-    /* margin: auto; */
     border-bottom-right-radius: 12px;
     border-bottom-left-radius: 12px;
-    /* box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5); */
     cursor: pointer;
     transition: padding 0.3s;
 
     &:hover {
       padding-bottom: 20px;
-    }
-
-    .install {
-      /*transform: rotate(90deg);*/
     }
   }
 </style>

@@ -1,3 +1,13 @@
+## [0.0.6] - 2019-04-26
+
+### Fixed
+- Unicode files still not playing
+- When library scan is finished route doesn't change
+- Fixed a way processing is working
+
+### Changed
+- Other UI fixes
+
 ## [0.0.5] - 2019-04-25
 
 ### Fixed

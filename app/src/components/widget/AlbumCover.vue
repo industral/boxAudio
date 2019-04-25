@@ -2,7 +2,7 @@
   <div class="cmp-widget cmp-widget-album-cover">
     <ul>
       <li v-for="album of albums">
-        <img :alt="`${album.name} cover`" :src="getCoverImg(album.cover)" class="media-object pull-left" />
+        <img alt="Album cover" :src="getCoverImg(album.cover)" class="media-object pull-left" />
       </li>
     </ul>
   </div>

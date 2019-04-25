@@ -58,7 +58,7 @@ export default class DropboxProcess extends LibraryProcess {
     }
   }
 
-  public async fetchFileDataRange(path: string = '', bytesRangeStart = 0, bytesRangeAmount = 1024 * 20) {
+  public async fetchFileDataRange(path: string = '', bytesRangeStart = 0, bytesRangeAmount = 1024 * 100) {
     const response = await fetch('https://content.dropboxapi.com/2/files/download', {
       headers: {
         'Authorization': `Bearer ${store.state.settings.accessTokenDropbox}`,
@@ -80,7 +80,6 @@ export default class DropboxProcess extends LibraryProcess {
     }
   }
 
-
   private async getMetadataForFileWithTries(file: dropbox.files.FileMetadataReference) {
     let arrayBuffer: ArrayBuffer;
 
@@ -89,98 +88,72 @@ export default class DropboxProcess extends LibraryProcess {
       arrayBuffer = fileDataRangeResult.data;
 
       let metadataResult = await this.getMetadataForArrayBuffer(arrayBuffer);
-      let iteration = 1;
+      let iteration = 0;
 
-      while (iteration < 5) {
-        if (!this.isMetadataOK(metadataResult && metadataResult.metadata)) {
-          fileDataRangeResult = await this.fetchFileDataRange(file.id, fileDataRangeResult.bytesRangeStart + fileDataRangeResult.bytesRangeAmount, fileDataRangeResult.bytesRangeAmount);
+      while (iteration < 3) {
+        if (this.isMetadataOK(metadataResult && metadataResult.metadata)) break;
 
-          arrayBuffer = arrayBufferConcat(arrayBuffer, fileDataRangeResult.data);
-          metadataResult = await this.getMetadataForArrayBuffer(arrayBuffer);
+        fileDataRangeResult = await this.fetchFileDataRange(file.id, fileDataRangeResult.bytesRangeStart + fileDataRangeResult.bytesRangeAmount, fileDataRangeResult.bytesRangeAmount);
 
-          ++iteration;
-        } else {
-          const metadata = metadataResult.metadata!;
+        arrayBuffer = arrayBufferConcat(arrayBuffer, fileDataRangeResult.data);
+        metadataResult = await this.getMetadataForArrayBuffer(arrayBuffer);
 
-          let trackNumber: string = '';
-          let diskNumber: string = '';
+        ++iteration;
+      }
 
-          if (metadata.common.track.no) {
-            trackNumber = metadata.common.track.no.toString();
+      const metadata = metadataResult.metadata!;
 
-            if (metadata.common.track.of) {
-              trackNumber += ` of ${metadata.common.track.of}`;
-            }
-          }
+      let trackNumber: string = '';
+      let diskNumber: string = '';
 
-          if (metadata.common.disk.no) {
-            diskNumber = metadata.common.disk.no.toString();
+      if (metadata.common.track.no) {
+        trackNumber = metadata.common.track.no.toString();
 
-            if (metadata.common.disk.of) {
-              diskNumber += ` of ${metadata.common.disk.of}`;
-            }
-          }
-
-          await db.addSong({
-            storageName: StorageName.Dropbox,
-            storageId: file.id,
-            artist: metadata.common.artist || 'Unknown',
-            albumArtist: metadata.common.albumartist || metadata.common.artist || 'Unknown',
-            album: metadata.common.album || 'Unknown',
-            title: metadata.common.title || 'Unknown',
-            diskNumber: diskNumber,
-            trackNumber: trackNumber,
-            file: file.path_lower!,
-            coverArt: metadata.common.picture,
-            size: file.size,
-            bitrate: metadata.format.bitrate!,
-            duration: metadata.format.duration!,
-            dataformat: metadata.format.dataformat!
-          });
-
-          await db.addAlbum({
-            storageName: StorageName.Dropbox,
-            albumArtist: metadata.common.albumartist || metadata.common.artist || 'Unknown',
-            album: metadata.common.album || 'Unknown',
-            coverArt: metadata.common.picture
-          });
-
-          delete metadata.common.picture;
-          store.commit('libraryProcessing/addLog', {
-            type: LogType.info,
-            message: `Metadata found for file: ${file.path_lower}`,
-            messageLong: `Metadata: ${JSON.stringify(metadata, null, 2)}`
-          });
-
-          break;
+        if (metadata.common.track.of) {
+          trackNumber += ` of ${metadata.common.track.of}`;
         }
       }
 
-      const metadata = metadataResult && metadataResult.metadata;
+      if (metadata.common.disk.no) {
+        diskNumber = metadata.common.disk.no.toString();
+
+        if (metadata.common.disk.of) {
+          diskNumber += ` of ${metadata.common.disk.of}`;
+        }
+      }
+
+      const albumArtist = metadata.common.albumartist || metadata.common.artist || 'Unknown';
+      const album = metadata.common.album || 'Unknown';
 
       await db.addSong({
-        storageId: file.id,
         storageName: StorageName.Dropbox,
-        artist: metadata && metadata.common.artist || 'Unknown',
-        albumArtist: metadata && metadata.common.albumartist || metadata && metadata.common.artist || 'Unknown',
-        album: metadata && metadata.common.album || 'Unknown',
-        title: metadata && metadata.common.title || file.path_lower! || 'Unknown',
+        storageId: file.id,
+        artist: metadata.common.artist || 'Unknown',
+        albumArtist,
+        album,
+        title: metadata.common.title || 'Unknown',
+        diskNumber: diskNumber,
+        trackNumber: trackNumber,
         file: file.path_lower!,
+        coverArt: metadata.common.picture,
         size: file.size,
-        bitrate: 0,
-        duration: 0,
-        dataformat: 'Unknown'
+        bitrate: metadata.format.bitrate!,
+        duration: metadata.format.duration!,
+        dataformat: metadata.format.dataformat!
       });
 
       await db.addAlbum({
         storageName: StorageName.Dropbox,
-        albumArtist: 'Unknown',
-        album: 'Unknown'
+        albumArtist,
+        album,
+        coverArt: metadata.common.picture
       });
 
+      delete metadata.common.picture;
       store.commit('libraryProcessing/addLog', {
-        type: LogType.warn,
-        message: `Metadata was not found for file: ${file.path_lower}`
+        type: LogType.info,
+        message: `Metadata found for file: ${file.path_lower}`,
+        messageLong: `Metadata: ${JSON.stringify(metadata, null, 2)}`
       });
     } catch (error) {
       console.error(error);
@@ -190,7 +163,7 @@ export default class DropboxProcess extends LibraryProcess {
   }
 
   private isMetadataOK(metadata: IAudioMetadata | undefined) {
-    return metadata && metadata.common && (metadata.common.artist || metadata.common.album || metadata.common.title) &&
+    return metadata && metadata.common && metadata.common.artist && metadata.common.albumartist && metadata.common.title &&
       metadata.format.sampleRate && metadata.format.duration && metadata.format.dataformat;
   }
 

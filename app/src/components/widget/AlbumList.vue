@@ -81,13 +81,11 @@
         height: 50px;
         width: 50px;
         box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        display: inline-block;
       }
 
       &.active {
-        img {
-          height: 60px;
-          width: 60px;
-        }
+        background: rgba(0, 0, 0, 0.1);
       }
     }
   }

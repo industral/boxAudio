@@ -1,4 +1,4 @@
-const VERSION = '0.0.5';
+const VERSION = '0.0.6';
 const DATA = {};
 const CACHE_NAME = `cache-${VERSION}`;
 

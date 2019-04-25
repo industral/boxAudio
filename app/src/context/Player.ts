@@ -22,7 +22,7 @@ export default new class Player {
 
     store.commit('player/setDuration', song.duration * 1000);
 
-    this.player = AV.Player.fromURL(`/storage/download?file=${encodeURIComponent(song.file)}`, {
+    this.player = AV.Player.fromURL(`/storage/download?file=${encodeURIComponent(song.storageId)}`, {
       length: song.size,
       //TODO: temporary fix, until fixed playback for m4a files.
       chunkSize: song.file.endsWith('.m4a') ? song.size : 1024 ** 2
