@@ -131,7 +131,7 @@ export default class DropboxProcess extends LibraryProcess {
         artist: metadata.common.artist || 'Unknown',
         albumArtist,
         album,
-        title: metadata.common.title || 'Unknown',
+        title: metadata.common.title || file.path_lower!,
         diskNumber: diskNumber,
         trackNumber: trackNumber,
         file: file.path_lower!,

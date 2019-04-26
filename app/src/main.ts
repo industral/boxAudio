@@ -11,7 +11,7 @@ import './assets/styles/material-icons.scss';
 import './assets/styles/components/index.scss';
 import './assets/styles/scrollbar.css';
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = process.env.NODE_ENV === 'production';
 
 new Vue({
   router,
@@ -22,3 +22,7 @@ new Vue({
     store.commit('settings/initialiseStore');
   }
 }).$mount('#app');
+
+router.afterEach((to) => {
+  document.getElementsByTagName('html')[0].dataset.pageName = to.name;
+});

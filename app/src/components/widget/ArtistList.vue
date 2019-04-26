@@ -29,8 +29,8 @@
     }
 
     selectArtist(artistName: string) {
-      this.$store.commit('player/selectArtist', artistName);
-      this.$store.commit('player/selectAlbum', null);
+      this.$store.commit('player/setSelectedArtist', artistName);
+      this.$store.commit('player/setSelectedAlbum', null);
     }
 
     selectArtistAtStartup() {
@@ -61,8 +61,12 @@
       padding: 5px 0 5px 10px;
     }
 
-    li {
+    > li {
       position: relative;
+
+      &:nth-child(even) {
+        background: rgba(255, 255, 255, 0.3);
+      }
 
       strong {
         font-weight: bold;

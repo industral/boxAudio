@@ -11,6 +11,6 @@ export default class Utils {
       return '/img/no-cover.jpg';
     }
 
-    return URL.createObjectURL(new Blob([data.data], {mime: data.format}));
+    return URL.createObjectURL(new Blob([data.data], {type: data.format}));
   }
 }

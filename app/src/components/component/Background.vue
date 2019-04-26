@@ -1,7 +1,7 @@
 <template>
   <div class="cmp-component cmp-component-background">
     <div class="mask"></div>
-    <img alt="Background image" ref="img" src="/img/backgrounds/2-preview.jpg" :class="[{loaded: isLoaded}]"/>
+    <img alt="Background image" ref="img" src="/img/backgrounds/preview.jpg" :class="[{loaded: isLoaded}]"/>
   </div>
 </template>
 
@@ -19,11 +19,11 @@
       const image = new Image();
 
       image.onload = () => {
-        this.$refs.img.src = '/img/backgrounds/2-800.jpg';
+        this.$refs.img.src = '/img/backgrounds/800px.jpg';
         this.$data.isLoaded = true;
       };
 
-      image.src = '/img/backgrounds/2-800.jpg';
+      image.src = '/img/backgrounds/800px.jpg';
     }
   }
 </script>
@@ -31,6 +31,7 @@
 <style lang="scss">
   .cmp-component-background {
     .mask {
+      display: none;
       position: fixed;
       top: 0;
       left: 0;

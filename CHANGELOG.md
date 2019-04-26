@@ -1,4 +1,15 @@
-## [0.0.6] - 2019-04-26
+## [0.0.7] - 2019-04-26
+
+### Changed
+- Updated Dixie from 2.x to 3.x
+- Improved DB schema. Added migration
+- Improved store (rewritten)
+
+### Fixed
+- Unknown for title instead of file name when processing
+- small UI cosmetic fixes
+
+## [0.0.6] - 2019-04-25
 
 ### Fixed
 - Unicode files still not playing

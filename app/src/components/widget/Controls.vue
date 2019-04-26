@@ -47,7 +47,7 @@
     }
 
     get currentTime() {
-      return this.$store.state.player.currentTime;
+      return this.player.getCurrentTime();
     }
 
     get duration() {
@@ -67,8 +67,8 @@
       return this.isPlaying ? 'mdi-pause' : 'mdi-play';
     }
 
-    setProgress(event) {
-      const newProgressValue = Number(event.target.value);
+    setProgress(event: Event) {
+      const newProgressValue = Number(event.target!.value);
       Player.setProgress(newProgressValue);
     }
 

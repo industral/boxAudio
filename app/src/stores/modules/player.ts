@@ -6,14 +6,13 @@ export enum IPlayingState {
 }
 
 interface IState {
-  selectedArtist?: string|null;
-  selectedAlbum?: string|null;
-  selectedSong?: string|null;
-  albumCovers?: [];
-  songTitle: string|null,
-  duration: number;
-  currentTime: number;
+  selectedArtist?: string | null;
+  selectedAlbum?: string | null;
+
+  playingSongId?: string | null;
+
   playingState: IPlayingState;
+  duration: number;
 
   isProgressShown: boolean;
 }
@@ -21,44 +20,32 @@ interface IState {
 const internalState: IState = {
   selectedArtist: null,
   selectedAlbum: null,
-  selectedSong: null,
-  songTitle: null,
 
-  albumCovers: [],
+  playingSongId: null,
 
-  duration: 0,
-  currentTime: 0,
   playingState: IPlayingState.None,
+  duration: 0,
 
   isProgressShown: false
 };
 
-const actions = {
-};
+const actions = {};
 
 const mutations = {
-  selectArtist(state: IState, artist: string|null) {
+  setSelectedArtist(state: IState, artist: string | null) {
     state.selectedArtist = artist;
   },
 
-  selectAlbum(state: IState, album: string|null) {
+  setSelectedAlbum(state: IState, album: string | null) {
     state.selectedAlbum = album;
   },
 
-  selectSong(state: IState, songFile: string|null) {
-    state.selectedSong = songFile;
-  },
-
-  setSongTitle(state: IState, songTitle: string|null) {
-    state.songTitle = songTitle;
+  setPlayingSongId(state: IState, playingSongId: string | null) {
+    state.playingSongId = playingSongId;
   },
 
   setDuration(state: IState, duration: number) {
     state.duration = duration;
-  },
-
-  setCurrentTime(state: IState, currentTime: number) {
-    state.currentTime = currentTime;
   },
 
   setPlayingState(state: IState, playingState: IPlayingState) {
@@ -67,15 +54,10 @@ const mutations = {
 
   setShownProgress(state: IState, isShownProgress: boolean) {
     state.isProgressShown = isShownProgress;
-  },
-
-  setAlbumCovers(state: IState, albumCovers) {
-    state.albumCovers = albumCovers;
   }
 };
 
-const getters = {
-};
+const getters = {};
 
 export default {
   namespaced: true,

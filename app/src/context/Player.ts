@@ -39,12 +39,11 @@ export default new class Player {
       }, location.origin);
     });
 
-    this.player.on('progress', (progress: number) => {
-      store.commit('player/setCurrentTime', progress);
-    });
+    // this.player.on('progress', (progress: number) => {
+    //   store.commit('player/setCurrentTime', progress);
+    // });
 
     await this.player.play();
-
     store.commit('player/setPlayingState', IPlayingState.Playing);
   }
 
@@ -57,7 +56,7 @@ export default new class Player {
     if (this.player) {
       this.player.stop();
       this.player.asset.source.stream && this.player.asset.source.stream.close();
-      store.commit('player/setCurrentTime', 0);
+      // store.commit('player/setCurrentTime', 0);
       store.commit('player/setDuration', 0);
       store.commit('player/setPlayingState', IPlayingState.Stopped);
     }
@@ -88,5 +87,9 @@ export default new class Player {
   setProgress(value: number) {
     const duration = store.state.player.duration;
     this.player.seek(duration * value / 100);
+  }
+
+  getCurrentTime() {
+    if (this.player) return this.player.currentTime;
   }
 };

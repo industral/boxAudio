@@ -18,7 +18,7 @@
     "arraybuffer-concat": "0.0.1",
     "av": "github:industral/aurora.js#issue-213",
     "compression-webpack-plugin": "^2.0.0",
-    "dexie": "^2.0.4",
+    "dexie": "^3.0.0-alpha.8",
     "dropbox": "^4.0.17",
     "flac.js": "^0.2.1",
     "lottie-web": "^5.5.2",

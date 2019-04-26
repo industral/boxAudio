@@ -25,8 +25,7 @@
     albums: IAlbum[] = [];
 
     selectAlbum(albumName: string) {
-      this.$store.commit('player/selectAlbum', albumName);
-      this.$store.commit('player/setAlbumCovers', this.albums[albumName].coverArt);
+      this.$store.commit('player/setSelectedAlbum', albumName);
     }
 
     get selectedArtist() {
@@ -68,8 +67,12 @@
       padding: 5px 0 5px 10px;
     }
 
-    li {
+    > li {
       position: relative;
+
+      &:nth-child(even) {
+        background: rgba(255, 255, 255, 0.3);
+      }
 
       strong {
         font-weight: bold;

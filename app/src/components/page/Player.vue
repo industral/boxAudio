@@ -12,7 +12,7 @@ import {IPlayingState} from '../../stores/modules/player';
           <AlbumList />
           <SongList />
 
-          <div @click="togglePlayingProgress()" class="toggle-playing-progress" v-show="isSelectedSong">
+          <div @click="togglePlayingProgress()" class="toggle-playing-progress" v-show="isPlayingSong">
             <span class="mdi mdi-chevron-up action-toggle-playing-progress"></span>
           </div>
         </div>
@@ -45,8 +45,8 @@ import {IPlayingState} from '../../stores/modules/player';
       return this.$store.state.player.isProgressShown;
     }
 
-    get isSelectedSong() {
-      return !!this.$store.state.player.selectedSong;
+    get isPlayingSong() {
+      return !!this.$store.state.player.playingSongId;
     }
 
     togglePlayingProgress() {

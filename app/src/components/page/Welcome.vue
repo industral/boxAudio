@@ -33,6 +33,14 @@
 </script>
 
 <style lang="scss">
+  html[data-page-name='welcome'] {
+    .cmp-component-background {
+      .mask {
+        display: block;
+      }
+    }
+  }
+
   .cmp-page-welcome {
     width: 100%;
     font-size: calc(0.7vw + 2.5vh + 0.5vmin);

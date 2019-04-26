@@ -14,5 +14,7 @@ export default new Vuex.Store({
     player,
     settings,
     main
-  }
+  },
+
+  strict: process.env.NODE_ENV !== 'production'
 });

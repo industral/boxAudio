@@ -41,6 +41,35 @@ class boxAudio extends Dexie {
       albums: '[albumArtist+album],albumArtist,album,storageName',
       songChunkCache: '++chunkId'
     });
+
+    // Migration in v0.0.7
+    this.version(4).stores({
+      songs_tmp: '++id,file,artist,[albumArtist+album],albumArtist,album,storageName,storageId',
+      albums_tmp: '&[albumArtist+album],albumArtist,album,storageName',
+      songChunkCache_tmp: '++id',
+
+      songs: null,
+      albums: null,
+      songChunkCache: null
+    }).upgrade(t => {
+      t.songs.toArray().then((objs) => t.songs_tmp.bulkAdd(objs));
+      t.albums.toArray().then((objs) => t.albums_tmp.bulkAdd(objs));
+      t.songChunkCache.toArray().then((objs) => t.songChunkCache_tmp.bulkAdd(objs));
+    });
+
+    this.version(5).stores({
+      songs: '++id,file,artist,[albumArtist+album],albumArtist,album,storageName,storageId',
+      albums: '&[albumArtist+album],albumArtist,album,storageName',
+      songChunkCache: '++id',
+
+      songs_tmp: null,
+      albums_tmp: null,
+      songChunkCache_tmp: null
+    }).upgrade(t => {
+      t.songs_tmp.toArray().then((objs) => t.songs.bulkAdd(objs));
+      t.albums_tmp.toArray().then((objs) => t.albums.bulkAdd(objs));
+      t.songChunkCache_tmp.toArray().then((objs) => t.songChunkCache.bulkAdd(objs));
+    });
   }
 }
 
@@ -98,6 +127,18 @@ class DB {
 
   async getSongsForArtistAndAlbum(artist: string, album: string) {
     return await db.songs.where({albumArtist: artist, album}).toArray();
+  }
+
+  async getSongInfo(songId: string) {
+    const songInfo = await db.songs.where({id: songId}).first();
+    if (!songInfo) return;
+
+    const albumInfo = await db.albums.where('[albumArtist+album]').equals([songInfo.albumArtist, songInfo.album]).first();
+
+    return {
+      ...songInfo,
+      coverArt: albumInfo && albumInfo.coverArt
+    };
   }
 }
 

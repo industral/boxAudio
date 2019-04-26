@@ -3,17 +3,17 @@
     <span @click="toggleCollapse()" class="mdi mdi-chevron-down action-expand-collapse"></span>
 
     <div class="background">
-      <img :src="getCoverImg(albumCovers)" alt="Album cover" />
+      <img :src="albumCover" alt="Album cover" />
     </div>
 
     <header>
       <div class="description">
-        <div class="artist">{{ selectedArtist }}</div>
-        <div class="album">{{ songTitle }} | {{ selectedAlbum }}</div>
+        <div class="artist">{{ artist }}</div>
+        <div class="album">{{ songTitle }} | {{ album }}</div>
       </div>
 
       <div class="cover">
-        <img :src="getCoverImg(albumCovers)" alt="Album cover" />
+        <img :src="albumCover" alt="Album cover" />
       </div>
     </header>
 
@@ -22,35 +22,52 @@
 </template>
 
 <script lang="ts">
-  import {Component, Vue} from 'vue-property-decorator';
+  import {Component, Vue, Watch} from 'vue-property-decorator';
 
   import Controls from '@/components/widget/Controls.vue';
   import utils from '@/assets/scripts/utils';
+  import db from '@/context/db';
 
   @Component({
     components: {
       Controls
     }
   }) export default class Playing extends Vue {
-    get selectedArtist() {
-      return this.$store.state.player.selectedArtist;
+    data() {
+      return {
+        playingSongInfo: null,
+        albumCover: null
+      };
     }
 
-    get selectedAlbum() {
-      return this.$store.state.player.selectedAlbum;
+    get artist() {
+      const playingSongInfo = this.$data.playingSongInfo;
+      return playingSongInfo && playingSongInfo.albumArtist;
+    }
+
+    get album() {
+      const playingSongInfo = this.$data.playingSongInfo;
+      return playingSongInfo && playingSongInfo.album;
     }
 
     get songTitle() {
-      return this.$store.state.player.songTitle;
+      const playingSongInfo = this.$data.playingSongInfo;
+      return playingSongInfo && playingSongInfo.title;
     }
 
-    get albumCovers() {
-      return this.$store.state.player.albumCovers;
+    get playingSongId() {
+      return this.$store.state.player.playingSongId;
     }
 
-    getCoverImg(covers: [] = []) {
-      if (!covers) return;
-      return utils.getURLFromArrayBuffer(covers[0]);
+    @Watch('playingSongId')
+    async playingSongIdChange() {
+      this.$data.playingSongInfo = await db.getSongInfo(this.playingSongId);
+      this.$data.albumCover = this.getAlbumCover();
+    }
+
+    getAlbumCover() {
+      const coverArt = this.$data.playingSongInfo.coverArt;
+      return utils.getURLFromArrayBuffer(coverArt && coverArt[0]);
     }
 
     toggleCollapse() {
@@ -95,9 +112,9 @@
       img {
         min-width: 100%;
         min-height: 100%;
-        filter: blur(22px);
+        filter: blur(3px);
         box-shadow: 18px 19px 20px 2000px rgba(255, 255, 255, 0.8);
-        opacity: 0.5;
+        opacity: 0.3;
       }
     }
 
@@ -121,12 +138,9 @@
 
       .cover {
         flex: 1;
-        /*position: relative;*/
-        /*left: calc(50% - 125px);*/
 
         img {
           width: 250px;
-          border-radius: 9px;
           box-shadow: 2px 3px 17px #333;
         }
       }

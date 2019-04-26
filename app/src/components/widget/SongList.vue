@@ -39,16 +39,19 @@
     async playSong(song: ISong) {
       if (this.$store.state.settings.accessTokenDropbox) {
         // if (!this.playingSong) {
-          this.$store.commit('player/setShownProgress', true);
+        this.$store.commit('player/setShownProgress', true);
         // }
 
-        this.$store.commit('player/selectSong', song.file);
-        this.$store.commit('player/setSongTitle', song.title);
+        this.$store.commit('player/setPlayingSongId', song.id);
 
         await Player.play(song);
       } else {
         this.$message.error('No Dropbox Access Token was found. Please reconnect to Dropbox storage again.');
       }
+    }
+
+    get selectedArtist() {
+      return this.$store.state.player.selectedArtist;
     }
 
     get selectedAlbum() {
@@ -61,7 +64,9 @@
 
     @Watch('selectedAlbum')
     async onPropertyChanged() {
-      this.songs = await db.getSongsForArtistAndAlbum(this.$store.state.player.selectedArtist, this.$store.state.player.selectedAlbum);
+      if (this.selectedArtist && this.selectedAlbum) {
+        this.songs = await db.getSongsForArtistAndAlbum(this.selectedArtist, this.selectedAlbum);
+      }
     }
   }
 </script>

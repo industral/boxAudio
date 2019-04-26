@@ -19,6 +19,14 @@
 </script>
 
 <style lang="scss">
+  html[data-page-name='initialSetup'] {
+    .cmp-component-background {
+      .mask {
+        display: block;
+      }
+    }
+  }
+
   .cmp-page-initial-setup {
     width: 100%;
   }
